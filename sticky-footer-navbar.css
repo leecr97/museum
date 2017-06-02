@@ -1,0 +1,65 @@
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html,
+body
+{
+    height: 100%;
+}
+
+/* Wrapper for page content to push down footer */
+
+#wrap
+{
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+
+#footer
+{
+    height: 60px;
+    background-color: #000000;
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+
+/* Not required for template or sticky footer method. */
+
+temprule
+{
+    color: #959595;
+}
+
+#wrap > .container
+{
+    padding: 60px 15px 0;
+}
+
+.container .text-muted
+{
+    margin: 20px 0;
+}
+
+#footer > .container
+{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+code
+{
+    font-size: 80%;
+}
+
+.temprule
+{
+    color: #9b9b9b;
+}
+

@@ -1,0 +1,88 @@
+
+
+.searchResultDescription
+{
+    color: #8c8c8c;
+    font-size: 12px;
+}
+
+.searchResult
+{
+    background-color: #5e5e5e;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.searchResultTitle
+{
+    color: #ededed;
+    font-weight: bold;
+}
+
+.searchResultGallery
+{
+    color: #bdb8b8;
+}
+
+.searchResultEnterGallery
+{
+
+}
+
+.searchResultEnter 
+{
+    color: #ffcc99;
+}
+.searchResultEnter:hover
+{
+    color: #ff9933;
+}
+
+.searchResultDate
+{
+    color: #333333;
+}
+
+.overlay
+{
+    position: relative;
+    visibility: hidden;
+    overflow-y: hidden;
+}
+
+.searchColumn
+{
+    overflow-y: auto;
+}
+
+.leaveGalleryButton
+{
+    position: relative;
+    bottom: 42px;
+    right: 4px;
+    background-color: #555555; 
+    color: #e7e7e7;
+    border-radius: 4px;
+    
+    margin:2px;
+    border: 1px solid #555555; /* Green */
+}
+
+.leaveGalleryButton:hover {
+    position: relative;
+    bottom: 42px;
+    right: 4px;
+    background-color: #555555; 
+    color: #e7e7e7;
+    border-radius: 4px;
+     margin:2px;
+    border: 1px solid #e7e7e7; /* Green */
+}
+
+::-webkit-scrollbar {
+    width: 1px;
+   
+}
