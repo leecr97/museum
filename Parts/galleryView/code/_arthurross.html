@@ -633,6 +633,7 @@
 
            // second room connection
            var nnMap = new THREE.TextureLoader().load("./siglab.png");
+           console.log(nnMap);
            nnMap.minFilter = THREE.LinearFilter;
            var nnMaterial = new THREE.SpriteMaterial( { map: nnMap } );
            var transport = new THREE.Sprite( nnMaterial );
