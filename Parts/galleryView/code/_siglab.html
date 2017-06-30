@@ -397,7 +397,7 @@
 
 
            // second room connection
-           var nnMap = new THREE.TextureLoader().load("images/arthurross.png");
+           var nnMap = new THREE.TextureLoader().load("./images/arthurross.png");
            var nnMaterial = new THREE.SpriteMaterial( { map: nnMap } );
            var transport = new THREE.Sprite( nnMaterial );
 
@@ -441,13 +441,13 @@
             var onError = function(xhr) {};
             THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
             var mtlLoader = new THREE.MTLLoader();
-            mtlLoader.setBaseUrl('sig/');
-            mtlLoader.setPath('sig/');
+            mtlLoader.setBaseUrl('./sig/');
+            mtlLoader.setPath('./sig/');
             mtlLoader.load('untitled.mtl', function(materials) {
                 materials.preload();
                 var objLoader = new THREE.OBJLoader();
                 objLoader.setMaterials(materials);
-                objLoader.setPath('sig/');
+                objLoader.setPath('./sig/');
                 objLoader.load('untitled.obj', function(object) {
                     //object.position.y = 95;
                     //  object.rotation = new THREE.Vector3(0,0,0);
