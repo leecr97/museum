@@ -297,4 +297,11 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 	this.handleResize();
 
+	// MINE
+	this.getObject = function () {
+
+		return object;
+
+	};
+
 };

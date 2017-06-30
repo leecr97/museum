@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sig Lab</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <!-- <link href="bootstrap/css/bootstrap.css" rel="stylesheet"> -->
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+        
+        body {
+            background-color: #ffffff;
+            margin: 0;
+            overflow: hidden;
+            font-family: arial;
+            cursor: default;
+        }
+        
+        #blocker {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #instructions {
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -moz-box;
+            display: box;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            box-pack: center;
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            box-align: center;
+            color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* hamburger button stuff */
+        .navbar {
+            background-color: transparent;
+            border-color: #e7e7e7;
+            position: fixed;
+            right: 0;
+            left: 0;
+            z-index: 1030;
+            border-radius: 0;
+            top: 0;
+            border-width: 0 0 1px;
+            padding-right: 0;
+            padding-left: 0;
+            max-height: 340px;
+        }
+
+        .hamburger {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .bar1, .bar2, .bar3 {
+            width: 35px;
+            height: 5px;
+            background-color: #333;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        /* Rotate first bar */
+        .change .bar1 {
+            -webkit-transform: rotate(-45deg) translate(-9px, 6px) ;
+            transform: rotate(-45deg) translate(-9px, 6px) ;
+        }
+
+        /* Fade out the second bar */
+        .change .bar2 {
+            opacity: 0;
+        }
+
+        /* Rotate last bar */
+        .change .bar3 {
+            -webkit-transform: rotate(45deg) translate(-8px, -8px) ;
+            transform: rotate(45deg) translate(-8px, -8px) ;
+        }
+
+        .accordionmenu {
+          opacity: 0;
+          max-height: 0;
+          overflow: hidden;
+          transition: 0.6s ease-in-out;
+        }
+
+        .accordionmenu.show {
+          opacity: 1;
+          max-height: 500px;
+        }
+
+        /* Style the buttons that are used to open and close the accordion panel */
+        button.accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+            font-size: 15px;
+        }
+
+        /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+        button.accordion.active, button.accordion:hover {
+            background-color: #ddd;
+        }
+
+        button.accordion:after {
+            content: '\002B'; /* Unicode character for "plus" sign (+) */
+            font-size: 13px;
+            color: #777;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+
+        button.accordion.active:after {
+            content: "\2212"; /* Unicode character for "minus" sign (-) */
+        }
+
+        /* Style the accordion panel.*/
+        div.panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0px;
+            overflow: hidden;
+            transition: 0.6s ease-in-out;
+            opacity: 0;
+            /*display: none;*/
+        }
+
+        .panel.show {
+          opacity: 1;
+          max-height: 500px;
+          /*display: inline;*/
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #c48635;
+            color: white;
+        }
+
+        .modal-body {padding: 2px 16px;}
+
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: #c48635;
+            color: white;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+
+        .pic {
+          display: inline-block;
+          width: 25%;
+          height: 100%;
+          vertical-align: top;
+        }
+
+        .desc {
+          display: inline-block;
+          width: 70%;
+          vertical-align: top;
+          margin-left: 5%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <script src="js/jquery.min.js"></script>
+
+    <script src="../build/three.min.js"></script>
+    <script src="js/controls/FirstPersonControls.js"></script>
+
+    <script src="js/loaders/DDSLoader.js"></script>
+    <script src="js/loaders/MTLLoader.js"></script>
+    <script src="js/loaders/OBJLoader.js"></script>
+
+    <script src="js/Detector.js"></script>
+    <script src="js/libs/stats.min.js"></script>
+
+    <!-- navbar-default navbar-fixed-top -->
+    <div class="navbar">
+        <div class="hamburger" onclick="myFunction(this)">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+        </div>
+
+        <div class="accordionmenu" id = "dropdown">
+            <button class="accordion">Section 1</button>
+            <div class="panel">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+            </div>
+
+            <button class="accordion">Section 2</button>
+            <div class="panel">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+            </div>
+
+            <button class="accordion">Section 3</button>
+            <div class="panel">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="ThreeJS" style="position: absolute; left:0px; top:0px">
+    </div> -->
+
+    <div id="modalwindow" class="modal">
+      <div class="modal-content">
+          <div id="modalheader" class="modal-header">
+            <span class="close">&times;</span>
+            <!-- FILLED BY SCRIPT DYNAMICALLY-->
+          </div>
+          <div id="modalcontent" class="modal-body">
+            <!-- FILLED BY SCRIPT DYNAMICALLY-->
+          </div>
+          <div id="modalfooter" class="modal-footer">
+            <!-- FILLED BY SCRIPT DYNAMICALLY-->
+          </div>
+        </div>
+    </div>
+
+    <div id="blocker">
+
+        <div id="instructions">
+            <span style="font-size:40px">Click to Enter</span>
+            <br /> (W, A, S, D = Move)
+        </div>
+
+    </div>
+
+    <script>
+    function myFunction(x) {
+        x.classList.toggle("change");
+        document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+      acc[i].onclick = function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        panel.classList.toggle("show");
+        if (panel.style.maxHeight){
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } 
+      }
+    }
+    </script>
+
+    <script>
+
+        var camera, scene, renderer;
+        var geometry, material, mesh;
+        var controls;
+        var container, stats;
+
+        var objects = [];
+
+        var myobjects = [];
+
+        var nodenames = [];
+
+        var raycaster;
+        var mouse, INTERSECTED;
+        var nameVisible = false;
+
+        var blocker = document.getElementById('blocker');
+        var instructions = document.getElementById('instructions');
+
+        var element = document.body;
+
+        function turnOff() {
+            controls.enabled = false;
+            controlsEnabled = false;
+
+            blocker.style.display = '-webkit-box';
+            blocker.style.display = '-moz-box';
+            blocker.style.display = 'box';
+
+            instructions.style.display = '';
+        }
+
+        instructions.addEventListener('click', function(event) {
+
+            instructions.style.display = 'none';
+            controlsEnabled = true;
+            controls.enabled = true;
+
+            blocker.style.display = 'none';
+
+        }, false);
+
+        // instructions.style.display = 'none';
+        // blocker.style.display = 'none';
+
+        init();
+        animate();
+
+        var controlsEnabled = false;
+        // controls.enabled = true;
+
+        var moveForward = false;
+        var moveBackward = false;
+        var moveLeft = false;
+        var moveRight = false;
+        //var canJump = false;
+
+        var pitchUp = false;
+        var pitchDown = false;
+        var yawLeft = false;
+        var yawRight = false;
+
+        var prevTime = performance.now();
+        var velocity = new THREE.Vector3();
+
+        function init() {
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+
+            scene = new THREE.Scene();
+
+
+            // controls = new THREE.PointerLockControls(camera);
+            controls = new THREE.FirstPersonControls(camera);
+            scene.add(controls.getObject());
+
+            var ambient = new THREE.AmbientLight(0x404040);
+            scene.add(ambient);
+
+            var light = new THREE.PointLight( 0xffffff, 1, 100 );
+      			light.position.set( 50, 50, 50 );
+      			//scene.add( light );
+      			light.position.set( 10, 10, 10 );
+      			scene.add( light );
+           // var directionalLight = new THREE.DirectionalLight(0xffeedd);
+            //directionalLight.position.set(0, 0, 1).normalize();
+           // scene.add(directionalLight);
+
+
+           // second room connection
+           var nnMap = new THREE.TextureLoader().load("images/arthurross.png");
+           var nnMaterial = new THREE.SpriteMaterial( { map: nnMap } );
+           var transport = new THREE.Sprite( nnMaterial );
+
+           transport.position.set(0, 6, -15);
+
+           transport.scale.set(1, 1, 1);  
+
+           transport.name = "transport";
+
+           scene.add(transport);
+           myobjects.push(transport);
+
+
+           // second room node name. hidden by default
+           var s2label = makeTextSprite("To Arthur Ross Gallery", {
+              fontsize: 24,
+              borderColor: {r:11, g:180, b:50, a:1.0},
+              backgroundColor: {r:255, g:255, b:255, a:1.0}
+           });
+           s2label.position.set(1, 2, 0);
+
+           scene.add( s2label );
+
+           var container = new THREE.Group();
+           transport.add( container );
+           container.add( s2label );
+           
+           transport.scale.x = 10;
+           transport.scale.y = 5;
+           container.scale.x = 0.1;
+           container.scale.y = 0.2;
+
+
+            // model
+            var onProgress = function(xhr) {
+                if (xhr.lengthComputable) {
+                    var percentComplete = xhr.loaded / xhr.total * 100;
+                    console.log(Math.round(percentComplete, 2) + '% downloaded');
+                }
+            };
+            var onError = function(xhr) {};
+            THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+            var mtlLoader = new THREE.MTLLoader();
+            mtlLoader.setBaseUrl('sig/');
+            mtlLoader.setPath('sig/');
+            mtlLoader.load('untitled.mtl', function(materials) {
+                materials.preload();
+                var objLoader = new THREE.OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.setPath('sig/');
+                objLoader.load('untitled.obj', function(object) {
+                    //object.position.y = 95;
+                    //  object.rotation = new THREE.Vector3(0,0,0);
+                    object.scale.x = 5;
+                    object.scale.y = 5;
+                    object.scale.z = 5;
+                   object.rotation.x = 3.14159;
+                    //object.rotation.y = -3.14;
+                    //object.rotation.z = 1.5708;
+                    object.position.x = -15;
+                    console.log(object);
+                    scene.add(object);
+                }, onProgress, onError);
+            });
+
+            //
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            //container.appendChild( renderer.domElement );
+            // container = document.getElementById('ThreeJS');
+            // container.appendChild( renderer.domElement);
+
+
+            var onKeyDown = function(event) {
+
+                switch (event.keyCode) {
+
+                    case 38: // up
+                        pitchUp = true;
+                        break;
+
+                    case 87: // w
+                        moveForward = true;
+                        break;
+
+                    case 37: // left
+                        yawLeft = true;
+                        break;
+
+                    case 65: // a
+                        moveLeft = true;
+                        break;
+
+                    case 40: // down
+                        pitchDown = true;
+                        break;
+
+                    case 83: // s
+                        moveBackward = true;
+                        break;
+
+                    case 39: // right
+                        yawRight = true;
+                        break;
+
+                    case 68: // d
+                        moveRight = true;
+                        break;
+
+                    case 32: // space
+                        resetPos();
+                        break;
+
+                    case 27: // esc
+                        turnOff();
+                        break;
+
+                }
+
+            };
+
+            var onKeyUp = function(event) {
+
+                switch (event.keyCode) {
+
+                    case 38: // up
+                        pitchUp = false;
+                        break;
+
+                    case 87: // w
+                        moveForward = false;
+                        break;
+
+                    case 37: // left
+                        yawLeft = false;
+                        break;
+
+                    case 65: // a
+                        moveLeft = false;
+                        break;
+
+                    case 40: // down
+                        pitchDown = false;
+                        break;
+
+                    case 83: // s
+                        moveBackward = false;
+                        break;
+
+                    case 39: // right
+                        yawRight = false;
+                        break;
+
+                    case 68: // d
+                        moveRight = false;
+                        break;
+
+                }
+
+            };
+
+            document.addEventListener('keydown', onKeyDown, false);
+            document.addEventListener('keyup', onKeyUp, false);
+
+            // raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+
+            raycaster = new THREE.Raycaster();
+
+            mouse = new THREE.Vector2();
+
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('touchstart', onDocumentTouchStart, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+           
+
+
+            //
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(0xffffff);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            // stats = new Stats();
+            // stats.domElement.style.position = 'absolute';
+            // stats.domElement.style.bottom = '0px';
+            // stats.domElement.style.zIndex = 100;
+            // container.appendChild( stats.domElement );
+
+            //
+
+            window.addEventListener('resize', onWindowResize, false);
+
+        }
+
+        function makeTextSprite( message, parameters )
+        {
+          if ( parameters === undefined ) parameters = {};
+          
+          var fontface = parameters.hasOwnProperty("fontface") ? 
+            parameters["fontface"] : "Arial";
+          
+          var fontsize = parameters.hasOwnProperty("fontsize") ? 
+            parameters["fontsize"] : 18;
+          
+          var borderThickness = parameters.hasOwnProperty("borderThickness") ? 
+            parameters["borderThickness"] : 4;
+          
+          var borderColor = parameters.hasOwnProperty("borderColor") ?
+            parameters["borderColor"] : { r:0, g:0, b:0, a:1.0 };
+          
+          var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?
+            parameters["backgroundColor"] : { r:255, g:255, b:255, a:1.0 };
+            
+          var canvas = document.createElement('canvas');
+          // document.body.appendChild(canvas);
+          var context = canvas.getContext('2d');
+          context.font = "Bold " + fontsize + "px " + fontface;
+            
+          // get size data (height depends only on font size)
+          var metrics = context.measureText( message );
+          var textWidth = metrics.width;
+
+          // background color
+          context.fillStyle   = "rgba(" + backgroundColor.r + "," + backgroundColor.g + ","
+                          + backgroundColor.b + "," + backgroundColor.a + ")";
+          // border color
+          context.strokeStyle = "rgba(" + borderColor.r + "," + borderColor.g + ","
+                          + borderColor.b + "," + borderColor.a + ")";
+
+          context.lineWidth = borderThickness;
+          roundRect(context, borderThickness/2, borderThickness/2, textWidth + borderThickness, fontsize * 1.4 + borderThickness, 6);
+          // 1.4 is extra height factor for text below baseline: g,j,p,q.
+          
+          // text color
+          context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
+          context.fillText( message, borderThickness, fontsize + borderThickness);
+          
+          // canvas contents will be used for a texture
+          var texture = new THREE.Texture(canvas) 
+          texture.needsUpdate = true;
+
+          var spriteMaterial = new THREE.SpriteMaterial( 
+            { map: texture } );
+          var sprite = new THREE.Sprite( spriteMaterial );
+          sprite.scale.set(0.5 * fontsize, 0.25 * fontsize, 1);
+          return sprite;  
+        }
+
+        // function for drawing rounded rectangles
+        function roundRect(ctx, x, y, w, h, r) 
+        {
+          console.log("x: " + x);
+          console.log("y: " + y);
+          console.log("w: " + w);
+          console.log("h: " + h);
+          console.log("r: " + r);
+            ctx.beginPath();
+            ctx.moveTo(x+r, y);
+            ctx.lineTo(x+w-r, y);
+            ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+            ctx.lineTo(x+w, y+h-r);
+            ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+            ctx.lineTo(x+r, y+h);
+            ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+            ctx.lineTo(x, y+r);
+            ctx.quadraticCurveTo(x, y, x+r, y);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();   
+        }
+
+        function onDocumentTouchStart(event) {
+            event.preventDefault();
+            event.clientX = event.touches[0].clientX;
+            event.clientY = event.touches[0].clientY;
+            onDocumentMouseDown(event);
+        }
+
+        // Get the modal
+        var modal = document.getElementById('modalwindow');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        var mheader = document.getElementById("modalheader");
+        var mcontent = document.getElementById("modalcontent");
+        var mfooter = document.getElementById("modalfooter");
+
+        function onDocumentMouseDown(event) {
+            event.preventDefault();
+            mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+            raycaster.setFromCamera( mouse, camera );
+            var intersects = raycaster.intersectObjects( myobjects );
+            if ( intersects.length > 0 ) {
+
+                var chosen = intersects[0].object;
+
+                if (controlsEnabled) {
+                    if (chosen.name == "transport") {
+                        var pos = controls.getObject().position;
+                        var dist = pos.distanceTo(chosen.position);
+                        console.log(dist);
+                        if (dist < 20) {
+                            window.location = '_arthurross.html';
+                        }
+                    }
+                }
+
+            }
+        }
+
+        function onDocumentMouseMove(event) {
+            event.preventDefault();
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        }
+
+        function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+        }
+
+        function resetPos() {
+          controls.getObject().position.set(0,0,0);
+        }
+
+        function animate() {
+
+            requestAnimationFrame(animate);
+
+            if (controlsEnabled) {
+                raycaster.ray.origin.copy(controls.getObject().position);
+                raycaster.ray.origin.y -= 10;
+
+                var intersections = raycaster.intersectObjects(objects);
+
+                var isOnObject = intersections.length > 0;
+
+                var time = performance.now();
+                var delta = (time - prevTime) / 1000;
+
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+
+                velocity.y -= velocity.y * 10.0 * delta;
+                //velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
+                if (moveForward) velocity.z -= 400.0 * delta;
+                if (moveBackward) velocity.z += 400.0 * delta;
+
+                if (moveLeft) velocity.x -= 400.0 * delta;
+                if (moveRight) velocity.x += 400.0 * delta;
+
+                if (isOnObject === true) {
+                    velocity.y = Math.max(0, velocity.y);
+
+                    //canJump = true;
+                }
+
+                controls.getObject().translateX(velocity.x * delta);
+                controls.getObject().translateY(velocity.y * delta);
+                controls.getObject().translateZ(velocity.z * delta);
+
+                if (controls.getObject().position.y < 5) {
+
+                    velocity.y = 0;
+                    controls.getObject().position.y = 5;
+
+                    //canJump = true;
+
+                }
+
+                var PI_2 = Math.PI / 2;
+
+                // if (pitchUp) {
+                //     controls.getObject().rotation.x += 0.01;
+                //     controls.getObject().rotation.x = Math.max( - PI_2, Math.min( PI_2, controls.getObject().rotation.x ) );
+                // }
+                // if (pitchDown) {
+                //     controls.getObject().rotation.x -= 0.01;
+                //     controls.getObject().rotation.x = Math.max( - PI_2, Math.min( PI_2, controls.getObject().rotation.x ) );
+                // }
+
+                if (yawLeft) {
+                    controls.getObject().rotation.y += 0.01;
+                }
+                if (yawRight) {
+                    controls.getObject().rotation.y -= 0.01;
+                }
+
+                prevTime = time;
+
+            }
+
+            render();
+
+        }
+
+        function render() {
+            raycaster.setFromCamera( mouse, camera );
+            var intersects = raycaster.intersectObjects( myobjects );
+            if ( intersects.length > 0 ) {
+                if ( INTERSECTED != intersects[ 0 ].object ) {
+                    if ( INTERSECTED ) {
+                        INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+
+                        if (nameVisible) {
+                            for (var i = 0; i < nodenames.length; i++) {
+                                nodenames[i].visible = false;
+                            }
+                        }
+                    }
+                    INTERSECTED = intersects[ 0 ].object;
+                    INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+                    if (INTERSECTED.name != "transport") {
+                      INTERSECTED.material.color.setHex( 0xff0000 );
+                    }
+                    // 
+                    document.body.style.cursor = "pointer";
+
+                    INTERSECTED.traverse( function(child) {
+                        child.visible = true;
+                        nameVisible = true;
+                    });
+
+                }
+            } else {
+                if ( INTERSECTED ) INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
+                INTERSECTED = null;
+                
+                if (nameVisible) {
+                    for (var i = 0; i < nodenames.length; i++) {
+                        nodenames[i].visible = false;
+                    }
+                }
+                document.body.style.cursor = "default";
+            }
+            renderer.render( scene, camera );
+        }
+
+        
+    </script>
+
+
+</body>
+
+</html>
